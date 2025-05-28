@@ -1,13 +1,14 @@
-import asyncio
 import logging
+
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
+
 from config.config import Config
+from database.db_operations import DatabaseManager
 from handlers.about import handle_about
 from handlers.booking import (
     start_booking, process_dates, process_guests,
     process_contact, CHOOSING_DATE, ENTERING_GUESTS, ENTERING_CONTACT
 )
-from database.db_operations import DatabaseManager
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -26,6 +27,8 @@ async def start(update, context):
 
 def main():
     DatabaseManager.init_db()
+
+    register_info_handlers(application)
 
     application = Application.builder().token(Config.BOT_TOKEN).build()
 
